@@ -21,6 +21,7 @@
       </div>
       <button id="js-search-button" class="search__btn">検索する</button>
     </div>
+    <div class="message"></div>
     <ul class="lists"></ul>
   </div>
 </div>
@@ -65,29 +66,28 @@
   // });
 //
 $(function() {
-  var searchCountNum = 0;
   var pages = 0;
   var oldKeywords;
+
 
   $('#js-search-button').on('click', function() {
     var newKeywords = $('#js-search-word').val();
     var charCount = newKeywords.replace(/\s+/g,'').length;
 
     if (charCount > 0) {
-      if (searchCountNum == 0) {
-        searchCountNum++;
+      if (pages === 0) {
         pages++;
         ajaxRequest(newKeywords,pages);
       } else {
         if (oldKeywords === newKeywords) {
           pages++;
-          ajaxRequest(newKeywords,pages);
+          $('.message').html('');
         } else if (newKeywords !== oldKeywords) {
           $('.lists').children().remove();
-          $('.message').remove();
+          $('.message').html('');
           pages = 1;
-          ajaxRequest(newKeywords,pages)
         }
+        ajaxRequest(newKeywords,pages)
       }
     } else {
         alert('検索ワードを入力して下さい');
@@ -113,8 +113,8 @@ $(function() {
   };
 
   function success(data) {
-    if (data.count == 0) {
-      $('.lists').before('<div class="message">検索結果数は０です。<br>検索ワードを変えるか、諦めて下さい。</div>');
+    if (data.count === 0) {
+      $('.message').html('検索結果数は０です。<br>検索ワードを変えるか、諦めて下さい。');
     } else {
       data.Items.forEach(function(booksData) {
         var template =
@@ -122,9 +122,9 @@ $(function() {
           '<div class="lists__item__inner">'+
             '<a href="'+booksData.Item.itemUrl+'" class="lists__item__link" target="_blank">'+
               '<img src="'+booksData.Item.largeImageUrl+'" class="lists__item__img" alt="">'+
-          '<p class="lists__item__detail">作品名：'+booksData.Item.title+'</p>'+
-          '<p class="lists__item__detail">作者　：'+booksData.Item.author+'</p>'+
-          '<p class="lists__item__detail">出版社：'+booksData.Item.publisherName+'</p>'+
+              '<p class="lists__item__detail">作品名：'+booksData.Item.title+'</p>'+
+              '<p class="lists__item__detail">作者　：'+booksData.Item.author+'</p>'+
+              '<p class="lists__item__detail">出版社：'+booksData.Item.publisherName+'</p>'+
             '</a>'+
           '</div>'+
         '</li>';
@@ -134,7 +134,7 @@ $(function() {
       };
     };
   function error() {
-    $('.lists').before('<div class="message">404 not found!<br>インターネットに接続して下さい</div>');
+    $('.message').html('404 not found!<br>インターネットに接続して下さい');
   };
 });
 </script>
