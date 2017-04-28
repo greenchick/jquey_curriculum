@@ -45,6 +45,30 @@
 // </li>
 //
 // このテンプレートに取得してきたオブジェクトを流し込みます。
+//
+$(function (){
+  $.ajax({
+    url: './data.json'
+  })
+  .done(function(data) {
+    // var colorData = data.colorsArray;
+    // for (var i in colorData) {
+    //   // console.log(colorData[i].hexValue);
+    //   $('.colorList').append('<li class="colorList__item"><p class="colorList__title" style="background-color:'+colorData[i].hexValue+' ;">'+colorData[i].colorName+'</p></li>');
+    // };
+
+    data.colorsArray.forEach(function(color) {
+      var template =
+        '<li class="colorList__item">' +
+          '<p class="colorList__title" style="background-color:' + color.hexValue + ';">' +
+            color.colorName +
+          '</p>' +
+        '</li>';
+
+      $('.colorList').append(template);
+    })
+  });
+});
 </script>
 </body>
 </html>

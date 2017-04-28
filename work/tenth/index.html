@@ -64,6 +64,81 @@
   //   // この中にデータ取得後の動きを記述していきます。
   // });
 //
+$(function(){
+  var searchCountNum = 0;
+  var pages = 0;
+  var oldKeywords;
+
+  $('#js-search-button').on('click', function() {
+    var newKeywords = $('#js-search-word').val();
+    var charCount = newKeywords.replace(/\s+/g,'').length;
+
+    if (charCount > 0) {
+      if (searchCountNum == 0) {
+        searchCountNum++;
+        pages++;
+        ajaxRequest(newKeywords,pages);
+      } else {
+        if (oldKeywords === newKeywords) {
+          pages++;
+          ajaxRequest(newKeywords,pages);
+        } else if (newKeywords !== oldKeywords) {
+          $('.lists').children().remove();
+          $('.messsage').remove();
+          pages = 1;
+          ajaxRequest(newKeywords,pages)
+        }
+      }
+    } else {
+        alert('検索ワードを入力して下さい');
+    }
+    oldKeywords = newKeywords;
+  });
+
+  function ajaxRequest(newKeywords,pages) {
+    $.ajax({
+      url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
+      type: 'GET',
+      datatype: 'json',
+      data: {
+        keyword: newKeywords,
+        applicationId: '1019399324990976605',
+        booksGenreId: '001',
+        hits: '20',
+        page: pages
+      },
+    })
+    .done(success)
+    .fail(error)
+  };
+
+  function success(data) {
+    if (data.count == 0) {
+      $('.lists').before('<div class="message">検索結果数は０です。<br>検索ワードを変えるか、諦めて下さい。</div>');
+    } else {
+      data.Items.forEach(function(booksData) {
+        var template =
+        '<li class="lists__item">'+
+          '<div class="lists__item__inner">'+
+            '<a href="'+booksData.Item.itemUrl+'" class="lists__item__link" target="_blank">'+
+              '<img src="'+booksData.Item.largeImageUrl+'" class="lists__item__img" alt="">'+
+          '<p class="lists__item__detail">作品名：'+booksData.Item.title+'</p>'+
+          '<p class="lists__item__detail">作者　：'+booksData.Item.author+'</p>'+
+          '<p class="lists__item__detail">出版社：'+booksData.Item.publisherName+'</p>'+
+            '</a>'+
+          '</div>'+
+        '</li>';
+
+        $('.lists').prepend(template);
+      });
+      };
+    };
+  });
+
+  function error() {
+    $('.lists').before('<div class="message">404 not found!<br>インターネットに接続して下さい</div>');
+  };
+});
 </script>
 </body>
 </html>

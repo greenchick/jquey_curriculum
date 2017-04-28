@@ -26,20 +26,22 @@
 // .keyup() 文字入力後に発火されるイベントです。
 // .replace(/\s+/g,'').length 改行を含まない文字数を取得します。
 // .val() input要素のvalueを取得します。
-$(function(){
-  $(".input").keyup(function(){
-    var inputData =$(".input").val();
+$(function() {
+  $('.input').on('keydown', function() {
+    var inputData = $('.input').val();
     var inputNum = inputData.replace(/\s+/g,'').length;
     var maxCount = 30;
     var count = maxCount - inputNum;
+    var $restCount = $('.rest-count');
     // console.log(inputData);
     // console.log(inputNum);
     // console.log(count);
-    $(".rest-count").text(count);
+
+    $restCount.text(count);
     if(inputNum > maxCount) {
-      $(".rest-count").addClass("red");
+      $restCount.addClass('red');
     } else {
-      $(".rest-count").removeClass("red");
+      $restCount.removeClass('red');
     }
   });
 });

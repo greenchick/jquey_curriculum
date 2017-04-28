@@ -34,26 +34,50 @@
 // .data() 要素のdata属性を取得します。
 // .width() 要素の幅を取得します。
 // .length 要素の個数を取得します。
-$(function(){
-  // var index = array[];
-  var slideNum = $(".slider-list").children("li").length;
-  var slideSize = $(".slider-area").width();
-  var slideIndex = [];
-  console.log(slideSize);
-  console.log(slideNum);
-  for (i=0; i < slideNum; i++){
-    slideIndex.push(slideSize * i);
-  }
-  console.log(slideIndex);
-  $(".slider-ctrl-btn").click(function(){
-    var clicked = $(this).data("ctrl");
-    console.log(clicked);
-    if (clicked == "prev") {
-      $(".slider-list").css("left",slideIndex[i]);
-    }
-  })
+$(function() {
+  var $sliderList =$('.slider-list');
+  var $sliderListImg = $sliderList.find('li');
+  var slideListWidth = $sliderListImg.width();
+  var slideMaxNum = $sliderListImg.length - 1;
+  var current = 0;
+  var $sliderBtn = $('.slider-ctrl-btn');
 
-})
+  $sliderBtn.on('click', function() {
+    var clicked = $(this).data('ctrl');
+
+    if (clicked ==='next') {
+        current++;
+        slideshow();
+    } else if (clicked === 'prev'){
+      current--;
+      slideshow();
+    }
+  });
+
+  function slideshow() {
+    if (current > slideMaxNum) {
+      current = 0;
+    } else if (current < 0) {
+      current = slideMaxNum;
+    }
+    $sliderList.stop().animate({
+      left: -slideListWidth * current
+    });
+  }
+  //   console.log(clicked);
+  //   if (clicked == 'next') {
+  //     $('.slider-list').stop().animate({
+  //       'left': -slideIndex[slideArrayNum % 4]
+  //     }, 200);
+  //     slideArrayNum = slideArrayNum +1;
+  //     } else {
+  //       $('.slider-list').stop().animate({
+  //         'left': -slideIndexReverse[slideArrayNum % 4]
+  //       }, 200);
+  //     slideArrayNum = slideArrayNum -1;
+  //     };
+  // });
+});
 </script>
 </body>
 </html>
