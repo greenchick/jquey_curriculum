@@ -64,7 +64,7 @@
   //   // この中にデータ取得後の動きを記述していきます。
   // });
 //
-$(function(){
+$(function() {
   var searchCountNum = 0;
   var pages = 0;
   var oldKeywords;
@@ -84,7 +84,7 @@ $(function(){
           ajaxRequest(newKeywords,pages);
         } else if (newKeywords !== oldKeywords) {
           $('.lists').children().remove();
-          $('.messsage').remove();
+          $('.message').remove();
           pages = 1;
           ajaxRequest(newKeywords,pages)
         }
@@ -133,8 +133,6 @@ $(function(){
       });
       };
     };
-  });
-
   function error() {
     $('.lists').before('<div class="message">404 not found!<br>インターネットに接続して下さい</div>');
   };
